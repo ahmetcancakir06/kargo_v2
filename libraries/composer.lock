@@ -1,0 +1,71 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "2b1584ae2ac358e6da29dfe63786ec2c",
+    "packages": [
+        {
+            "name": "hightman/httpclient",
+            "version": "v1.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hightman/httpclient.git",
+                "reference": "4a93982e3322496c51dbb95506471be92ea3fdc5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hightman/httpclient/zipball/4a93982e3322496c51dbb95506471be92ea3fdc5",
+                "reference": "4a93982e3322496c51dbb95506471be92ea3fdc5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "hightman\\http\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "hightman",
+                    "email": "hightman@twomice.net"
+                }
+            ],
+            "description": "A parallel HTTP client written in pure PHP",
+            "homepage": "http://hightman.cn/",
+            "keywords": [
+                "curl",
+                "http client",
+                "php",
+                "rest"
+            ],
+            "support": {
+                "issues": "https://github.com/hightman/httpclient/issues",
+                "source": "https://github.com/hightman/httpclient/tree/v1.13"
+            },
+            "time": "2021-10-07T23:22:37+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}
