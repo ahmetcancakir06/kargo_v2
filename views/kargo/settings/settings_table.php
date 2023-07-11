@@ -3,7 +3,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 $aColumns = [
-    'id',
+    db_prefix() . 'kargolist.id',
     'urun_ismi',
     'productname',
     'urun_aciklama',
@@ -11,9 +11,9 @@ $aColumns = [
     'urun_resim',
     'urun_stok',
     'urun_fiyat',
-    'bayi_id',
+    'kargobayi.bayi as bayi',
     'tarih',
-    'staffid',
+    'CONCAT(tblstaff.firstname," ",tblstaff.lastname,",",tblstaff.staffid) as staff',
 ];
 
 $tabName = 'kargo_settings';
@@ -23,29 +23,41 @@ $sIndexColumn = 'id';
 $sTable       = db_prefix() . 'kargolist';
 
 $ci = &get_instance();
-// $only_id_number = $ci->input->get('only_id_number', true);
+$stok = $ci->input->get('stok', true);
+
 //$ci->load->model('server_api_logs_model');
 $ci->load->model('server_api_staff_model');
 
 
 $where = [];
+if(isset($stok) && !empty($stok)){
 
-$result = data_tables_init($aColumns, $sIndexColumn, $sTable, [], $where, ["id"]);
+    if($stok == '1') {
+        array_push($where, 'AND tblkargolist.urun_stok > 0');
+    }else{
+        array_push($where,'AND tblkargolist.urun_stok < 1');
+    }
+}
+
+
+$join = [
+    'LEFT JOIN kargobayi ON kargobayi.id = ' . db_prefix() . 'kargolist.bayi_id',
+    'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'kargolist.staffid',
+];
+$result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ["tblkargolist.id"]);
 $output  = $result['output'];
 $rResult = $result['rResult'];
 
 foreach ($rResult as $aRow) {
     $row = [];
     for ($i = 0; $i < count($aColumns); $i++) {
+        $aColumns[$i]=str_replace('kargobayi.bayi as bayi',"bayi",$aColumns[$i]);
+
+        $aColumns[$i]=str_replace('CONCAT(tblstaff.firstname," ",tblstaff.lastname,",",tblstaff.staffid) as staff',"staff",$aColumns[$i]);
         $_data = $aRow[$aColumns[$i]];
         if ($aColumns[$i] == 'id') {
             $_data = '<div style="white-space: nowrap;"><input type="checkbox" id="' . $tabName . '-cbox-' . $aRow['id'] . '" data-value="' . $aRow['id'] . '" style="float: left" onchange="addRemoveToBatch(\'' . $tabName . '\',\'' . trim($aRow['id']) . '\');" />&nbsp;&nbsp;';
             $_data .= '&nbsp;' . $aRow['id'] . '&nbsp;&nbsp;&nbsp;</div>';
-        } else if ($aColumns[$i] == 'who') {
-            $getwho = $ci->server_api_staff_model->getWho($aRow['who']);
-            if (isset($getwho)) {
-                $_data = $getwho['firstname'] . " " . $getwho['lastname'];
-            }
         }
         $row[] = $_data;
     }

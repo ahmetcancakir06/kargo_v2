@@ -26,6 +26,15 @@ if (has_permission('kargo', '', $tabName)) {
         <div class="row">
             <div class="col-md-12">
                 <div class="clearfix"></div>
+                <div class="col-md-4" style="display: block; padding-top: 2rem;padding-bottom: 2rem;">
+                    <label for="stokfilter"><?php echo _l('stok_filter');?></label>
+                    <select id="stokfilter" class="form-control">
+                        <option value=""><?php echo _l('all');?></option>
+                            <option value="1"><?php echo _l('stok_var');?></option>
+                            <option value="-1"><?php echo _l('stok_yok');?></option>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
                 <div id="<?php echo $columnsDiv; ?>" style="position: relative; margin: 1rem;border: 1px solid lightgray;border-radius: 0.5rem; padding-top: 1rem;display:none;">
                 </div>
                 <hr class="hr-panel-heading" />
@@ -101,9 +110,9 @@ if (has_permission('kargo', '', $tabName)) {
                     text: '<?php echo _l('columns') ?>'
                 });
 
-                $("#selectOnly_id_number").change(function() {
-                    value = $("#selectOnly_id_number option:selected").val();
-                    sysTables[tabKargo].table.ajax.url('<?php echo admin_url('kargo/kargo_settings') ?>/?only_id_number=' + value).load();
+                $("#stokfilter").change(function(){
+                    value = $("#stokfilter option:selected" ).val();
+                    sysTables[tabKargo].table.ajax.url( '<?php echo admin_url('kargo/kargo_settings') ?>/?stok=' + value).load();
                 });
                 fillSelectByElement(sysUrls[tabKargo].getCategories, 'selCategoryId', ['id', 'category_name'], false);
             });
