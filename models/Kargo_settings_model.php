@@ -53,7 +53,11 @@ class Kargo_settings_model extends App_Model
         return $this->db->get(db_prefix() . self::$table_name)->row();
     }
     
-    
+    public function getKargoBayi(){
+        $sql="SELECT * FROM kargobayi;";
+        $get=$this->db->query($sql)->result_array();
+        return count($get) > 0 ? $get : [];
+    }
    
     public function get($id = '')
     {

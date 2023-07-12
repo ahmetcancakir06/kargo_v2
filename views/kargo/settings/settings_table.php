@@ -24,6 +24,7 @@ $sTable       = db_prefix() . 'kargolist';
 
 $ci = &get_instance();
 $stok = $ci->input->get('stok', true);
+$kargobayi = $ci->input->get('kargobayifilter', true);
 
 //$ci->load->model('server_api_logs_model');
 $ci->load->model('server_api_staff_model');
@@ -31,14 +32,15 @@ $ci->load->model('server_api_staff_model');
 
 $where = [];
 if(isset($stok) && !empty($stok)){
-
     if($stok == '1') {
         array_push($where, 'AND tblkargolist.urun_stok > 0');
     }else{
         array_push($where,'AND tblkargolist.urun_stok < 1');
     }
 }
-
+if(isset($kargobayi) && !empty($kargobayi)){
+    array_push($where, 'AND tblkargolist.bayi_id = \''.$kargobayi.'\'');
+}
 
 $join = [
     'LEFT JOIN kargobayi ON kargobayi.id = ' . db_prefix() . 'kargolist.bayi_id',

@@ -19,12 +19,22 @@ $fields = array(
 $tabName = 'kargo_settings';
 $columnsDiv = 'tableColumnsDiv_' . $tabName;
 $itemForm = 'item' . $tabName;
+$ci = &get_instance();
+$ci->load->model('kargo_settings_model');
 
 if (has_permission('kargo', '', $tabName)) {
 ?>
     <div role="tabpanel" class="tab-pane active" id="<?php echo $tabName; ?>">
         <div class="row">
             <div class="col-md-12">
+                <div class="_buttons">
+                    <button type="button" class="btn btn-info pull-left display-block mr-1 mr-2" onclick="addModal<?php echo $itemForm; ?>();">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+
+                        <?php echo _l('new_' . $tabName); ?>
+
+                    </button>
+                </div>
                 <div class="clearfix"></div>
                 <div class="col-md-4" style="display: block; padding-top: 2rem;padding-bottom: 2rem;">
                     <label for="stokfilter"><?php echo _l('stok_filter');?></label>
@@ -32,6 +42,20 @@ if (has_permission('kargo', '', $tabName)) {
                         <option value=""><?php echo _l('all');?></option>
                             <option value="1"><?php echo _l('stok_var');?></option>
                             <option value="-1"><?php echo _l('stok_yok');?></option>
+                    </select>
+                </div>
+                <div class="col-md-4" style="display: block; padding-top: 2rem;padding-bottom: 2rem;">
+                    <label for="kargobayifilter"><?php echo _l('kargobayifilter');?></label>
+                    <select id="kargobayifilter" class="form-control">
+                        <option value=""><?php echo _l('all');?></option>
+                        <?php
+                        $kargobayis=$ci->kargo_settings_model->getKargoBayi();
+                        foreach ($kargobayis as $kargobayi) {
+                        ?>
+                        <option value="<?=$kargobayi['id']?>"><?= $kargobayi['bayi']?></option>
+                        <?php
+                        }
+                        ?>
                     </select>
                 </div>
                 <div class="clearfix"></div>
@@ -48,12 +72,124 @@ if (has_permission('kargo', '', $tabName)) {
             </button>
         </div>
     </div> -->
+        <div class="modal fade" id="mdl<?php echo $itemForm; ?>" tabindex="-1" role="dialog" aria-labelledby="mlabel<?php echo $itemForm; ?>" aria-hidden="true">
+            <form id="frm<?php echo $itemForm; ?>" method="POST" enctype="multipart/form-data">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h5 class="modal-title" id="mlabel<?php echo $itemForm; ?>">
+                            </h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" id="id<?php echo $itemForm; ?>" data-id="id" value="">
 
+                                <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                        <label for="urun_ismi<?php echo $itemForm; ?>" class="control-label"><?php echo _l('urun_ismi_tr'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <!--input class="form-control" id="commands_id<?php echo $itemForm; ?>" required data-id="commands_id" value=""-->
+                                        <input class="form-control" onchange="urun_baslik_yazi(this)" id="urun_ismi<?php echo $itemForm; ?>" data-id="urun_ismi" value="">
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="urun_ismi_en<?php echo $itemForm; ?>" class="control-label"><?php echo _l('urun_ismi_en'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <!--input class="form-control" id="commands_id<?php echo $itemForm; ?>" required data-id="commands_id" value=""-->
+                                        <input class="form-control"  id="urun_ismi_en<?php echo $itemForm; ?>" data-id="productname" value="">
+
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                        <label for="urun_aciklama<?php echo $itemForm; ?>" class="control-label"><?php echo _l('urun_aciklama'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <!--input class="form-control" id="commands_id<?php echo $itemForm; ?>" required data-id="commands_id" value=""-->
+                                        <textarea class="form-control" onchange="urun_aciklama_yazi(this)" id="urun_aciklama<?php echo $itemForm; ?>" data-id="urun_aciklama"></textarea>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="productexplanation<?php echo $itemForm; ?>" class="control-label"><?php echo _l('productexplanation'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <!--input class="form-control" id="commands_id<?php echo $itemForm; ?>" required data-id="commands_id" value=""-->
+                                        <textarea class="form-control" id="productexplanation<?php echo $itemForm; ?>" data-id="productexplanation" ></textarea>
+
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                        <input type="file" class="form-control" name="resim" accept="image/jpeg, image/png, image/jpg" onchange="dosyaOnizleme(this);" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <img id="onizleme" alt="Resim önizleme" />
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                        <label for="which_server<?php echo $itemForm; ?>" class="control-label"><?php echo _l('which_server'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <select id="which_server<?php echo $itemForm; ?>" class="form-control" data-id="which_server" required>
+
+                                        </select>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="allowed<?php echo $itemForm; ?>" class="control-label"><?php echo _l('allowed'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <select id="allowed<?php echo $itemForm; ?>" class="form-control" data-id="allowed">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-2" id="in_system" style="display:none">
+                                    <div class="col-sm-6">
+                                        <label for="staff_user_id<?php echo $itemForm; ?>" class="control-label"><?php echo _l('staff_user_id'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <select id="staff_user_id<?php echo $itemForm; ?>" class="form-control selectpicker" multiple data-live-search="true"  data-width="100%" data-id="staff_user_id">
+
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="module_name<?php echo $itemForm; ?>" class="control-label"><?php echo _l('module_name'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <select id="module_name<?php echo $itemForm; ?>" class="form-control selectpicker" multiple data-live-search="true"  data-width="100%" data-id="module_name">
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                                <div class="row mb-2" id="out_system" style="display:none">
+                                    <div class="col-sm-6">
+                                        <label for="ip_address<?php echo $itemForm; ?>" class="control-label"><?php echo _l('ip_address'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <input class="form-control" id="ip_address<?php echo $itemForm; ?>" data-id="ip_address" value="">
+                                    </div>
+                                    <div class="col-sm-6" id="api_keyinput">
+                                        <label for="api_key<?php echo $itemForm; ?>" class="control-label"><?php echo _l('api_key'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <input class="form-control" id="api_key<?php echo $itemForm; ?>" data-id="api_key" value="">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div id="formMsg<?php echo $itemForm; ?>" class="alert alert-dismissible text-left" role="alert" style="display: none;">
+                                <button type="button" class="close" aria-label="Close" onclick="resetFormState('<?php echo $itemForm; ?>');"><span aria-hidden="true">&times;</span></button>
+                                <span id="formMsgText<?php echo $itemForm; ?>"></span>
+                            </div>
+                            <!-- <button type="button" class="btn btn-warning" onclick="itemTestConn<?php echo $itemForm; ?>();">
+                        <?php echo _l('test_connection'); ?>
+                    </button> -->
+                            <button type="button" class="btn btn-light" data-dismiss="modal">
+                                <?php echo _l('close'); ?>
+                            </button>
+                            <button type="button" id="btnItemSaveformMsg<?php echo $itemForm; ?>" name="btnItemSave" class="btn btn-primary submit" data-loading-text="<?php echo _l('saving'); ?>" onclick="<?php echo $itemForm; ?>Save();">
+                                <?php echo _l('save'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
 
         <script>
             tabKargo = '<?php echo $tabName; ?>';
             frmKargo = '<?php echo $itemForm; ?>';
-
+            var stok_filter=0;
+            var bayi_filter=0;
             // Onload function
             document.addEventListener('DOMContentLoaded', function() {
 
@@ -64,8 +200,6 @@ if (has_permission('kargo', '', $tabName)) {
                 };
 
                 <?php
-                $ci = &get_instance();
-                $ci->load->model('kargo_settings_model');
                 echo "defaultValues[frmKargo] = {\r\n";
                 foreach ($ci->kargo_settings_model->fields as $field) {
                     echo '  ' . $field[0] . ':' . $field[1] . ",\r\n";
@@ -112,11 +246,34 @@ if (has_permission('kargo', '', $tabName)) {
 
                 $("#stokfilter").change(function(){
                     value = $("#stokfilter option:selected" ).val();
-                    sysTables[tabKargo].table.ajax.url( '<?php echo admin_url('kargo/kargo_settings') ?>/?stok=' + value).load();
+                    stok_filter=value;
+                    if(bayi_filter == 0) {
+                        sysTables[tabKargo].table.ajax.url('<?php echo admin_url('kargo/kargo_settings') ?>/?stok=' + value).load();
+                    }else{
+                        sysTables[tabKargo].table.ajax.url('<?php echo admin_url('kargo/kargo_settings') ?>/?stok=' + value+'&kargobayifilter='+bayi_filter).load();
+                    }
+                });
+
+                $("#kargobayifilter").change(function(){
+                    value = $("#kargobayifilter option:selected" ).val();
+                    bayi_filter=value;
+                    if(stok_filter == 0) {
+                        sysTables[tabKargo].table.ajax.url('<?php echo admin_url('kargo/kargo_settings') ?>/?kargobayifilter=' + value).load();
+                    }else{
+                        sysTables[tabKargo].table.ajax.url('<?php echo admin_url('kargo/kargo_settings') ?>/?stok='+stok_filter+'&kargobayifilter=' + value).load();
+                    }
                 });
                 fillSelectByElement(sysUrls[tabKargo].getCategories, 'selCategoryId', ['id', 'category_name'], false);
             });
-
+            function dosyaOnizleme(input) {
+                if (input.files && input.files[0]) {
+                    var dosyaOkuyucu = new FileReader();
+                    dosyaOkuyucu.onload = function (e) {
+                        document.getElementById('onizleme').setAttribute('src', e.target.result);
+                    };
+                    dosyaOkuyucu.readAsDataURL(input.files[0]);
+                }
+            }
             function addModal<?php echo $itemForm; ?>() {
                 formName = frmKargo;
                 resetFormState(formName);
@@ -144,7 +301,36 @@ if (has_permission('kargo', '', $tabName)) {
                     backdrop: true
                 })
             };
-
+            function urun_aciklama_yazi(thiss) {
+                var aciklama=thiss.value;
+                $.ajax({
+                    url: "https://api.mymemory.translated.net/get?q="+aciklama+"&langpair=tr|en", // JSON verisini döndüren PHP dosyasının yolunu buraya yazın
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#productexplanation'+frmKargo).val(data.responseData.translatedText);
+                    },
+                    error: function() {
+                        // AJAX isteği başarısız olduğunda çalışacak işlev
+                        console.log("AJAX isteği başarısız oldu.");
+                    }
+                });
+            }
+            function urun_baslik_yazi(thiss) {
+                var aciklama=thiss.value;
+                $.ajax({
+                    url: "https://api.mymemory.translated.net/get?q="+aciklama+"&langpair=tr|en", // JSON verisini döndüren PHP dosyasının yolunu buraya yazın
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#urun_ismi_en'+frmKargo).val(data.responseData.translatedText);
+                    },
+                    error: function() {
+                        // AJAX isteği başarısız olduğunda çalışacak işlev
+                        console.log("AJAX isteği başarısız oldu.");
+                    }
+                });
+            }
             function detailsModal<?php echo $itemForm; ?>(id) {
                 formName = frmKargo;
                 resetFormState(formName);
@@ -195,7 +381,7 @@ if (has_permission('kargo', '', $tabName)) {
                     });
             };
 
-            
+
 
             function delete<?php echo $itemForm; ?>(id) {
 

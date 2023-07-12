@@ -51,6 +51,10 @@
         overflow-y: scroll;
         transition: all 2s;
     }
+    #onizleme {
+        max-width: 100%;
+        max-height: 300px;
+    }
 </style>
 <script>
     defaultValues = [];
