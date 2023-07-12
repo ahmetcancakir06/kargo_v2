@@ -73,7 +73,10 @@ foreach ($rResult as $aRow) {
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="' . $tabName . 'dropdownMenu-' . $aRow['id'] . '" style="bottom:auto!important;">
 
                 ';
-  
+    if (has_permission('server_api', '', 'server_api_commands_per_edit')) {
+        $actions .= '<li><a href="javascript:detailsModal' . $itemForm . '(' . $aRow['id'] . ')">' . _l('record_details') . '</a></li>';
+        $actionbos = 0;
+    }
     if (has_permission('server_api', '', 'server_api_logs_delete')) {
         $actions .= '<li><a style="color:red;" href="javascript:delete' . $itemForm . '(' . $aRow['id'] . ')">' . _l('record_delete') . '</a></li>';
         $actionbos = 0;

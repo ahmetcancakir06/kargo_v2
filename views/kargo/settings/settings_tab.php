@@ -113,56 +113,42 @@ if (has_permission('kargo', '', $tabName)) {
 
                                     </div>
                                 </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-sm-3">
+                                        <label for="stok<?php echo $itemForm; ?>" class="control-label"><?php echo _l('stok'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <!--input class="form-control" id="commands_id<?php echo $itemForm; ?>" required data-id="commands_id" value=""-->
+                                        <input  class="form-control"  id="stok<?php echo $itemForm; ?>" data-id="urun_stok" value="">
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label for="fiyat<?php echo $itemForm; ?>" class="control-label"><?php echo _l('fiyat'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <!--input class="form-control" id="commands_id<?php echo $itemForm; ?>" required data-id="commands_id" value=""-->
+                                        <input  class="form-control"  id="fiyat<?php echo $itemForm; ?>" data-id="urun_fiyat" value="">
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="bayi<?php echo $itemForm; ?>" class="control-label"><?php echo _l('bayi'); ?><span style="color:red">&nbsp;*</span></label>
+                                        <select id="bayi<?php echo $itemForm; ?>" class="form-control" data-id="bayi_id">
+                                            <?php
+                                            foreach ($kargobayis as $kargobayi) {
+                                                ?>
+                                                <option value="<?=$kargobayi['id']?>"><?= $kargobayi['bayi']?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" name="resim" accept="image/jpeg, image/png, image/jpg" onchange="dosyaOnizleme(this);" />
+                                        <input type="file" class="form-control" name="resim" data-id="resim" id="resim" accept="image/jpeg, image/png, image/jpg" onchange="dosyaOnizleme(this);" />
                                     </div>
                                     <div class="col-sm-6">
-                                        <img id="onizleme" alt="Resim önizleme" />
+                                        <img id="onizleme" data-id="fakeimage" name="fakeimage" alt="Resim önizleme" />
                                     </div>
                                 </div>
-                                <div class="row mb-2">
-                                    <div class="col-sm-6">
-                                        <label for="which_server<?php echo $itemForm; ?>" class="control-label"><?php echo _l('which_server'); ?><span style="color:red">&nbsp;*</span></label>
-                                        <select id="which_server<?php echo $itemForm; ?>" class="form-control" data-id="which_server" required>
 
-                                        </select>
-
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="allowed<?php echo $itemForm; ?>" class="control-label"><?php echo _l('allowed'); ?><span style="color:red">&nbsp;*</span></label>
-                                        <select id="allowed<?php echo $itemForm; ?>" class="form-control" data-id="allowed">
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mb-2" id="in_system" style="display:none">
-                                    <div class="col-sm-6">
-                                        <label for="staff_user_id<?php echo $itemForm; ?>" class="control-label"><?php echo _l('staff_user_id'); ?><span style="color:red">&nbsp;*</span></label>
-                                        <select id="staff_user_id<?php echo $itemForm; ?>" class="form-control selectpicker" multiple data-live-search="true"  data-width="100%" data-id="staff_user_id">
-
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="module_name<?php echo $itemForm; ?>" class="control-label"><?php echo _l('module_name'); ?><span style="color:red">&nbsp;*</span></label>
-                                        <select id="module_name<?php echo $itemForm; ?>" class="form-control selectpicker" multiple data-live-search="true"  data-width="100%" data-id="module_name">
-
-                                        </select>
-
-                                    </div>
-
-                                </div>
-                                <div class="row mb-2" id="out_system" style="display:none">
-                                    <div class="col-sm-6">
-                                        <label for="ip_address<?php echo $itemForm; ?>" class="control-label"><?php echo _l('ip_address'); ?><span style="color:red">&nbsp;*</span></label>
-                                        <input class="form-control" id="ip_address<?php echo $itemForm; ?>" data-id="ip_address" value="">
-                                    </div>
-                                    <div class="col-sm-6" id="api_keyinput">
-                                        <label for="api_key<?php echo $itemForm; ?>" class="control-label"><?php echo _l('api_key'); ?><span style="color:red">&nbsp;*</span></label>
-                                        <input class="form-control" id="api_key<?php echo $itemForm; ?>" data-id="api_key" value="">
-                                    </div>
-
-                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -419,6 +405,8 @@ if (has_permission('kargo', '', $tabName)) {
             async function <?php echo $itemForm; ?>Save() {
                 let formName = frmKargo
                 let btnItemSave = $('#btnItemSaveformMsg' + formName);
+                console.log($('#resim').val());
+
                 try {
                     resetFormState(formName);
                     btnItemSave.button('loading');
@@ -428,6 +416,7 @@ if (has_permission('kargo', '', $tabName)) {
                     jQuery.each(jQuery('#frm' + formName)[0].elements, function(i, j) {
                         value = getInputValue(j) == '' ? null : getInputValue(j);
                         dataId = getDataId(j);
+                        console.log(`dataId: ${dataId}, value: ${value}`);
                         if (dataId != undefined) {
                             //console.log(`dataId: ${dataId}, value: ${value}`);
                             if (typeof(value) == 'string' && value.trim() == '') {

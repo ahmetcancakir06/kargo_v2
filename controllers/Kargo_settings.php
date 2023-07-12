@@ -118,8 +118,11 @@ class Kargo_settings extends AdminControllerBase
         }
         $id = $this->input->post('id', true);
         $this->load->model('kargo_settings_model');
+        print_r($this->input->post());
+        die;
         if ($id == null or $id == '') {
             try {
+
                 $id = $this->kargo_settings_model->add($this->input->post());
                 if ($id !== false) {
                     $response = $this->kargo_settings_model->get($id);
