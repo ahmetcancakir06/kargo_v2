@@ -13,7 +13,7 @@ $aColumns = [
     'urun_fiyat',
     'kargobayi.bayi as bayi',
     'tarih',
-    'CONCAT(tblstaff.firstname," ",tblstaff.lastname,",",tblstaff.staffid) as staff',
+    'CONCAT(tblstaff.firstname," ",tblstaff.lastname) as staff',
 ];
 
 $tabName = 'kargo_settings';
@@ -55,11 +55,15 @@ foreach ($rResult as $aRow) {
     for ($i = 0; $i < count($aColumns); $i++) {
         $aColumns[$i]=str_replace('kargobayi.bayi as bayi',"bayi",$aColumns[$i]);
 
-        $aColumns[$i]=str_replace('CONCAT(tblstaff.firstname," ",tblstaff.lastname,",",tblstaff.staffid) as staff',"staff",$aColumns[$i]);
+        $aColumns[$i]=str_replace('CONCAT(tblstaff.firstname," ",tblstaff.lastname) as staff',"staff",$aColumns[$i]);
         $_data = $aRow[$aColumns[$i]];
         if ($aColumns[$i] == 'id') {
             $_data = '<div style="white-space: nowrap;"><input type="checkbox" id="' . $tabName . '-cbox-' . $aRow['id'] . '" data-value="' . $aRow['id'] . '" style="float: left" onchange="addRemoveToBatch(\'' . $tabName . '\',\'' . trim($aRow['id']) . '\');" />&nbsp;&nbsp;';
             $_data .= '&nbsp;' . $aRow['id'] . '&nbsp;&nbsp;&nbsp;</div>';
+        }else if($aColumns[$i] == 'urun_resim'){
+            if(strlen($aRow['urun_resim']) > 100){
+                $_data="<img width='200px' src='".$aRow['urun_resim']."'>";
+            }
         }
         $row[] = $_data;
     }

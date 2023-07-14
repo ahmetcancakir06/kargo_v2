@@ -90,7 +90,7 @@
                             if (has_permission('kargo', '', 'kargo_commands_per')) {
                             ?>
                                 <li role="presentation">
-                                    <a href="#kargo_commands_per" aria-controls="kargo_commands_per" role="tab" data-toggle="tab"><?php echo _l('kargo_commands_per'); ?></a>
+                                    <a href="#kargo_kargolar" aria-controls="kargo_kargolar" role="tab" data-toggle="tab"><?php echo _l('kargo_kargolar'); ?></a>
                                 </li>
                             <?php
                                 $gor = 1;
@@ -121,12 +121,12 @@
                             <?php
                             if (has_permission('kargo', '', 'kargo_settings')) {
                                 get_instance()->load->view('kargo/settings/settings_tab');
-                            }/*
+                            }
                             ?>
                             <?php
                             if (has_permission('kargo', '', 'kargo_commands_per')) {
-                                get_instance()->load->view('kargo/commands_per/commands_per_tab');
-                            }
+                                get_instance()->load->view('kargo/kargolar/kargolar_tab');
+                            }/*
                             ?>
                             <?php
                             if (has_permission('kargo', '', 'kargo_logs')) {
