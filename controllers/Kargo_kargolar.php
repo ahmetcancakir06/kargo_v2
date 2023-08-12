@@ -3,7 +3,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 include_once "AdminControllerBase.php";
 
-class Kargo_settings extends AdminControllerBase
+class Kargo_kargolar extends AdminControllerBase
 {
 
     public function __construct()
@@ -11,46 +11,69 @@ class Kargo_settings extends AdminControllerBase
         parent::__construct();
     }
 
-    //------------------- kargo_settings ------------------------------------
+    //------------------- kargo_kargolar ------------------------------------
 
     public function index()
     {
-        if (!has_permission('kargo', '', 'kargo_settings')) {
+        if (!has_permission('kargo', '', 'kargo_kargolar')) {
             access_denied('kargo');
         }
         if ($this->input->is_ajax_request()) {
-            $this->app->get_table_data(module_views_path('kargo', 'kargo/settings/settings_table'));
+            $this->app->get_table_data(module_views_path('kargo', 'kargo/kargolar/kargolar_table'));
         }
         //$this->app_scripts->add('circle-progress-js','assets/plugins/jquery-circle-progress/circle-progress.min.js');
-        // $data['title'] = _l('kargo_settings');
-        // $this->load->view('kargo_settings_list', $data);
+        // $data['title'] = _l('kargo_kargolar');
+        // $this->load->view('kargo_kargolar_list', $data);
+    }
+    public function urun_ekle()
+    {
+        $this->load->library('urunekle');
+        $id=$this->input->post('urunsayac');
+        // AJAX isteğine yanıt olarak HTML kodunu alın
+        $html = $this->urunekle->getHTMLResponse($id);
+
+        // HTML kodunu JSON formatına dönüştürerek döndürün
+        $response = array('html' => $html);
+        echo json_encode($response);
     }
 
+    public function get_musteri_bilgi(){
+        $id=$this->input->post("id");
+        $this->load->model('clients_model');
+        $result=$this->clients_model->get($id);
+        echo json_encode($result);
+    }
+    public function get_urun(){
+        $id=$this->input->post('id');
+        $this->load->model('kargo_settings_model');
+        $result=$this->kargo_settings_model->get($id);
+        echo json_encode($result);
+    }
     public function get_last_update()
     {
-        if (!has_permission('kargo', '', 'kargo_settings')) {
+        if (!has_permission('kargo', '', 'kargo_kargolar')) {
             $this->access_denied_ajax();
         }
-        $this->load->model('kargo_settings_model');
-        $data = $this->kargo_settings_model->get_last_update();
+        $this->load->model('kargo_kargolar_model');
+        $data = $this->kargo_kargolar_model->get_last_update();
         echo json_encode($data);
         die;
     }
 
     public function get_id_title()
     {
-        if (!has_permission('kargo', '', 'kargo_settings')) {
+        if (!has_permission('kargo', '', 'kargo_kargolar')) {
             $this->access_denied_ajax();
         }
-        $this->load->model('kargo_settings_model');
-        $data = $this->kargo_settings_model->getIdAndTitle();
+        $this->load->model('kargo_kargolar_model');
+        $data = $this->kargo_kargolar_model->getIdAndTitle();
         echo json_encode($data);
         die;
     }
 
     public function get()
     {
-        if (!has_permission('kargo', '', 'kargo_settings')) {
+        if (!has_permission('kargo', '', 'kargo_kargolar')) {
             $this->access_denied_ajax();
         }
         if (!$this->input->post()) {
@@ -60,15 +83,15 @@ class Kargo_settings extends AdminControllerBase
         if (!$id) {
             $this->respErrorAjax("id gelmedi");
         }
-        $this->load->model('kargo_settings_model');
-        $response = $this->kargo_settings_model->get($id);
+        $this->load->model('kargo_kargolar_model');
+        $response = $this->kargo_kargolar_model->get($id);
         echo json_encode($response);
         die;
     }
 
     public function delete_multiple()
     {
-        if (!has_permission('kargo', '', 'kargo_settings')) {
+        if (!has_permission('kargo', '', 'kargo_kargolar')) {
             $this->access_denied_ajax();
         }
         if (!$this->input->post()) {
@@ -78,8 +101,8 @@ class Kargo_settings extends AdminControllerBase
         if (!$ids) {
             $this->respErrorAjax("idler gelmedi");
         }
-        $this->load->model('kargo_settings_model');
-        $response = $this->kargo_settings_model->delete_multiple($ids);
+        $this->load->model('kargo_kargolar_model');
+        $response = $this->kargo_kargolar_model->delete_multiple($ids);
         if ($response == true) {
             $this->respSuccesAjax("Kayıtlar silindi");
         } else {
@@ -89,7 +112,7 @@ class Kargo_settings extends AdminControllerBase
 
     public function undelete_multiple()
     {
-        if (!has_permission('kargo', '', 'kargo_settings')) {
+        if (!has_permission('kargo', '', 'kargo_kargolar')) {
             $this->access_denied_ajax();
         }
         if (!$this->input->post()) {
@@ -99,8 +122,8 @@ class Kargo_settings extends AdminControllerBase
         if (!$ids) {
             $this->respErrorAjax("idler gelmedi");
         }
-        $this->load->model('kargo_settings_model');
-        $response = $this->kargo_settings_model->undelete_multiple($ids);
+        $this->load->model('kargo_kargolar_model');
+        $response = $this->kargo_kargolar_model->undelete_multiple($ids);
         if ($response == true) {
             $this->respSuccesAjax("Kayıtlar geri alındı");
         } else {
@@ -110,14 +133,14 @@ class Kargo_settings extends AdminControllerBase
 
     public function add_update()
     {
-        if (!has_permission('kargo', '', 'kargo_settings')) {
+        if (!has_permission('kargo', '', 'kargo_kargolar')) {
             $this->access_denied_ajax();
         }
         if (!$this->input->post()) {
             $this->respErrorAjax("parametre vermelisiniz.");
         }
         $id = $this->input->post('id', true);
-        $this->load->model('kargo_settings_model');
+        $this->load->model('kargo_kargolar_model');
         $data=$this->input->post();
 
         $data['urun_resim']=str_replace("[removed]","data:image/png;base64,",$data['urun_resim']);
@@ -127,9 +150,9 @@ class Kargo_settings extends AdminControllerBase
         if ($id == null or $id == '') {
             try {
 
-                $id = $this->kargo_settings_model->add($data);
+                $id = $this->kargo_kargolar_model->add($data);
                 if ($id !== false) {
-                    $response = $this->kargo_settings_model->get($id);
+                    $response = $this->kargo_kargolar_model->get($id);
                     echo json_encode($response);
                     die;
                 } else {
@@ -140,9 +163,9 @@ class Kargo_settings extends AdminControllerBase
             }
         } else {
             try {
-                $success = $this->kargo_settings_model->update($data, $id);
+                $success = $this->kargo_kargolar_model->update($data, $id);
                 if ($success) {
-                    $response = $this->kargo_settings_model->get($id);
+                    $response = $this->kargo_kargolar_model->get($id);
                     echo json_encode($response);
                     die;
                 } else {

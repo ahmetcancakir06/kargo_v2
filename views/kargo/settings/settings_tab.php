@@ -145,7 +145,8 @@ if (has_permission('kargo', '', $tabName)) {
                                         <input type="file" class="form-control" name="resim" data-id="resim" id="resim" accept="image/jpeg, image/png, image/jpg" onchange="dosyaOnizleme(this);" />
                                     </div>
                                     <div class="col-sm-6">
-                                        <img id="onizleme" data-id="fakeimage" name="fakeimage" alt="Resim önizleme" />
+                                        <img id="onizleme"  alt="Resim önizleme" />
+                                        <input type="hidden" id="onizlemeinput" data-id="urun_resim" name="fakeimage">
                                     </div>
                                 </div>
 
@@ -256,6 +257,8 @@ if (has_permission('kargo', '', $tabName)) {
                     var dosyaOkuyucu = new FileReader();
                     dosyaOkuyucu.onload = function (e) {
                         document.getElementById('onizleme').setAttribute('src', e.target.result);
+                        document.getElementById('onizlemeinput').setAttribute('value', e.target.result);
+
                     };
                     dosyaOkuyucu.readAsDataURL(input.files[0]);
                 }
@@ -263,6 +266,9 @@ if (has_permission('kargo', '', $tabName)) {
             function addModal<?php echo $itemForm; ?>() {
                 formName = frmKargo;
                 resetFormState(formName);
+                $('#resim').val("");
+                $('#onizlemeinput').val("");
+                $('#onizleme').attr("src","");
                 $("#mlabel" + formName).text("<?php echo _l('record_new'); ?>");
                 jQuery.each(jQuery('#frm' + formName)[0].elements, function(i, j) {
                     //console.log(`i: ${i}, j: ${getDataId(j)}`);
@@ -405,7 +411,7 @@ if (has_permission('kargo', '', $tabName)) {
             async function <?php echo $itemForm; ?>Save() {
                 let formName = frmKargo
                 let btnItemSave = $('#btnItemSaveformMsg' + formName);
-                console.log($('#resim').val());
+                console.log($('#onizlemeinput').val());
 
                 try {
                     resetFormState(formName);
