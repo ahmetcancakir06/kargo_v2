@@ -104,13 +104,14 @@
                                 $gor = 1;
                             }
                         
-                            if (has_permission('kargo', '', 'kargo_module_settings')) {
+                            if (has_permission('kargo', '', 'kargo_module_settings')) {/*
                             ?>
                                 <li role="presentation">
                                     <a href="#kargo_module_settings" aria-controls="kargo_module_settings" role="tab" data-toggle="tab"><?php echo _l('kargo_module_settings'); ?></a>
                                 </li>
                             <?php
                                 $gor = 1;
+                                */
                             }
                             if ($gor == 0) {
                                 echo _l('sgyy');
