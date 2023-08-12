@@ -302,8 +302,10 @@ if (has_permission('kargo', '', $tabName)) {
                                     <div class="col-sm-12" style="display:none" id="faturanumara">
                                         <div class="form-group">
                                             <label class="control-label">Fatura Numarası</label>
-                                            <input type="text" class="form-control" autocomplete="off" name="faturanumarasi" id="faturanumarasi">
+                                            <!--input type="text" class="form-control" autocomplete="off" name="faturanumarasi" id="faturanumarasi"-->
+                                            <select class="form-control" name="faturanumarasi" id="faturanumarasi">
 
+                                            </select>
                                         </div>
 
                                     </div>
@@ -574,19 +576,39 @@ if (has_permission('kargo', '', $tabName)) {
                     },
                     success: function(results) {
                         console.log(results.shipping_state)
-                        $('#mahallemodal').val(results.shipping_state);
-                        $('#eyaletmodal').val(results.shipping_city);
-                        $('#zipmodal').val(results.shipping_zip);
-                        $('#adresmodal').val(results.shipping_street);
-                        $('#fatura_adresi').css("display", "block");
-                        $('#fatura_adresi').attr("href", "../admin/clients/client/" + id + "?group=invoices");
-                        $('#mahallemodal1').val(results.shipping_state);
-                        $('#eyaletmodal1').val(results.shipping_city);
-                        $('#zipmodal1').val(results.shipping_zip);
-                        $('#adresmodal1').val(results.shipping_street);
+                        fatura_getAll(id);
+                        if(results.shipping_state == ""){
+                            alert_float("danger", "Fatura adresi bulunamadı normal adresi ile dolduruluyor");
+
+                            $('#mahallemodal').val(results.state);
+                            $('#eyaletmodal').val(results.city);
+                            $('#zipmodal').val(results.zip);
+                            $('#adresmodal').val(results.street);
+                            $('#fatura_adresi').css("display", "block");
+                            $('#fatura_adresi').attr("href", "../admin/clients/client/" + id + "?group=invoices");
+                            $('#mahallemodal1').val(results.state);
+                            $('#eyaletmodal1').val(results.city);
+                            $('#zipmodal1').val(results.zip);
+                            $('#adresmodal1').val(results.street);
+                        }else {
+                            $('#mahallemodal').val(results.shipping_state);
+                            $('#eyaletmodal').val(results.shipping_city);
+                            $('#zipmodal').val(results.shipping_zip);
+                            $('#adresmodal').val(results.shipping_street);
+                            $('#fatura_adresi').css("display", "block");
+                            $('#fatura_adresi').attr("href", "../admin/clients/client/" + id + "?group=invoices");
+                            $('#mahallemodal1').val(results.shipping_state);
+                            $('#eyaletmodal1').val(results.shipping_city);
+                            $('#zipmodal1').val(results.shipping_zip);
+                            $('#adresmodal1').val(results.shipping_street);
+                        }
 
                     }
                 });
+            }
+            function fatura_getAll(musteri_id) {
+                $('#faturanumarasi').empty();
+                $('#faturanumarasi').append("<option value='"+musteri_id+"'>test</option>");
             }
             function addModal<?php echo $itemForm; ?>() {
                 formName = frmKargolar;
@@ -689,9 +711,7 @@ if (has_permission('kargo', '', $tabName)) {
                             $('#urun_aciklamamodal' + dataid).val(results.urun_aciklama);
                             $('#urun_stokmodal1' + dataid).val(results.urun_stok);
                             $('#urun_fiyatmodal1' + dataid).val(results.urun_fiyat);
-                            $('#urunresimsrc' + dataid).attr("src",
-                                "../assets/images/kargo/urunler/" + results
-                                    .urun_resim);
+                            $('#urunresimsrc' + dataid).attr("src", results.urun_resim);
 
                             $('#urun_aciklamamodal1' + dataid).val(results.urun_aciklama);
                         } else {
